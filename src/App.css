@@ -1,0 +1,20 @@
+body {
+  background-color: #5a2f2f;
+  color: #fff;
+}
+
+.bg-cabernet-800 {
+  background-color: #3d1f1f;
+}
+
+.bg-cabernet-700 {
+  background-color: #5a2f2f;
+}
+
+.text-cabernet-800 {
+  color: #3d1f1f;
+}
+
+.text-white {
+  color: #fff;
+}
