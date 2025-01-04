@@ -1,39 +1,48 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setViewType, toggleDropdown } from "../features/viewSlice"; 
+import { FaList, FaThLarge, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Navbar = () => {
-  return (
-    <div className="bg-cabernet-900 text-white px-6 py-4 shadow-lg flex items-center justify-between">
-      <div className="flex items-center space-x-2">
-        <i className="fas fa-cat text-3xl text-white hover:text-cabernet-400 transition duration-300" />
-        <h1 className="text-xl font-bold">BORAT</h1>
-      </div>
+  const dispatch = useDispatch();
+  const dropdownOpen = useSelector((state) => state.app.dropdownOpen);  
+  const viewType = useSelector((state) => state.app.viewType); 
+  
+  const handleViewChange = (type) => {
+    dispatch(setViewType(type));  
+  };
 
-      <div className="flex space-x-4">
-        <a
-          href="https://wa.me/+249129512940"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white hover:text-cabernet-400 transition duration-300"
-        >
-          <i className="fab fa-whatsapp text-2xl" />
-        </a>
-        <a
-          href="https://linkedin.com/in/solafa-ameer"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white hover:text-cabernet-400 transition duration-300"
-        >
-          <i className="fab fa-linkedin-in text-2xl" />
-        </a>
-        <a
-          href="https://github.com/slaftamyr"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white hover:text-cabernet-400 transition duration-300"
-        >
-          <i className="fab fa-github text-2xl" />
-        </a>
-      </div>
+  const handleDropdownToggle = () => {
+    dispatch(toggleDropdown());
+  };
+
+  return (
+    <div className="bg-cabernet-800 text-white p-4 flex justify-between items-center">
+      <h1 className="text-xl font-bold"><i className="fas fa-cat p-4"></i>BORAT</h1>
+
+      <button onClick={handleDropdownToggle} className="text-2xl">
+        {dropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
+      </button>
+
+      {dropdownOpen && (
+        <div className="bg-cabernet-700 p-4 absolute top-16 right-0 w-40 rounded shadow-lg flex flex-col items-center">
+          <button
+            onClick={() => handleViewChange("grid")}
+            className={`flex items-center bg-cabernet-600 p-2 mb-4 rounded w-full justify-center ${viewType === "grid" ? "bg-cabernet-500" : ""}`}
+          >
+            <FaThLarge className="text-xl" />
+            <span className="ml-2">Grid</span>
+          </button>
+
+          <button
+            onClick={() => handleViewChange("list")}
+            className={`flex items-center bg-cabernet-600 p-2 rounded w-full justify-center ${viewType === "list" ? "bg-cabernet-500" : ""}`}
+          >
+            <FaList className="text-xl" />
+            <span className="ml-2">List</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
