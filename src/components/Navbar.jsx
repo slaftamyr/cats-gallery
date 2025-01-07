@@ -1,15 +1,20 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setViewType, toggleDropdown } from "../features/viewSlice"; 
+import { setViewType, toggleDropdown, setImageType } from "../features/viewSlice";
 import { FaList, FaThLarge, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const dropdownOpen = useSelector((state) => state.app.dropdownOpen);  
-  const viewType = useSelector((state) => state.app.viewType); 
-  
+  const dropdownOpen = useSelector((state) => state.app.dropdownOpen);
+  const viewType = useSelector((state) => state.app.viewType);
+  const imageType = useSelector((state) => state.app.imageType);
+
+  const toggleImageType = () => {
+    const newType = imageType === "cat" ? "dog" : "cat";
+    dispatch(setImageType(newType));
+  };
   const handleViewChange = (type) => {
-    dispatch(setViewType(type));  
+    dispatch(setViewType(type));
   };
 
   const handleDropdownToggle = () => {
@@ -17,29 +22,48 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-cabernet-800 text-white p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold"><i className="fas fa-cat p-4"></i>BORAT</h1>
+    <div className="bg-cabernet-800 text-white p-4 flex justify-between items-center relative">
+      <h1 className="text-xl font-bold">Cute Animals</h1>
+      <div className="flex items-center">
+  <span className="mr-2">CATs</span>
+  <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      checked={imageType === "dog"}
+      onChange={toggleImageType}
+      className="sr-only peer"
+    />
+    <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-cabernet-700"></div>
+    <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 transform peer-checked:translate-x-5"></div>
+  </label>
+  <span className="mr-2">DOGs</span>
+</div>
 
-      <button onClick={handleDropdownToggle} className="text-2xl">
+      <button
+        onClick={handleDropdownToggle}
+        className="text-white text-2xl flex items-center"
+      >
         {dropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
       </button>
-
       {dropdownOpen && (
-        <div className="bg-cabernet-700 p-4 absolute top-16 right-0 w-40 rounded shadow-lg flex flex-col items-center">
+        <div className="absolute top-16 right-0 bg-white text-cabernet-800 rounded shadow-lg py-2 w-48">
           <button
             onClick={() => handleViewChange("grid")}
-            className={`flex items-center bg-cabernet-600 p-2 mb-4 rounded w-full justify-center ${viewType === "grid" ? "bg-cabernet-500" : ""}`}
+            className={`flex items-center w-full px-4 py-2 text-left hover:bg-cabernet-200 ${
+              viewType === "grid" ? "font-bold" : ""
+            }`}
           >
-            <FaThLarge className="text-xl" />
-            <span className="ml-2">Grid</span>
+            <FaThLarge className="mr-2" />
+            Grid View
           </button>
-
           <button
             onClick={() => handleViewChange("list")}
-            className={`flex items-center bg-cabernet-600 p-2 rounded w-full justify-center ${viewType === "list" ? "bg-cabernet-500" : ""}`}
+            className={`flex items-center w-full px-4 py-2 text-left hover:bg-cabernet-200 ${
+              viewType === "list" ? "font-bold" : ""
+            }`}
           >
-            <FaList className="text-xl" />
-            <span className="ml-2">List</span>
+            <FaList className="mr-2" />
+            List View
           </button>
         </div>
       )}

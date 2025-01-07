@@ -1,49 +1,60 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setImages, setLoading, setPage, setSelectedImage, clearSelectedImage } from "../features/viewSlice";
+import {
+  setImages,
+  setLoading,
+  setPage,
+  setSelectedImage,
+  clearSelectedImage,
+} from "../features/viewSlice";
 
 const Gallery = () => {
   const dispatch = useDispatch();
-  const { viewType, images, page, loading, selectedImage } = useSelector((state) => state.app); // الوصول إلى الحالة من appSlice
+  const { viewType, images, page, loading, selectedImage, imageType } = useSelector(
+    (state) => state.app
+  );
 
   const fetchImages = async () => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(
-        `https://api.thecatapi.com/v1/images/search?limit=8&page=${page}&api_key=live_NuHaGSIxY60ZgI86BPvCcBN1bi82nEfZbgzBh29PA5nWqiW5ajwjm0CBBc1jvvw3`
-      );
+      const endpoint =
+        imageType === "cat"
+          ? `https://api.thecatapi.com/v1/images/search?limit=8&page=${page}&api_key=live_NuHaGSIxY60ZgI86BPvCcBN1bi82nEfZbgzBh29PA5nWqiW5ajwjm0CBBc1jvvw3`
+          : `https://api.thedogapi.com/v1/images/search?limit=8&page=${page}&api_key=live_NuHaGSIxY60ZgI86BPvCcBN1bi82nEfZbgzBh29PA5nWqiW5ajwjm0CBBc1jvvw3`;
+
+      const response = await fetch(endpoint);
       const data = await response.json();
-      dispatch(setImages(data));  
+      dispatch(setImages(data));
     } catch (error) {
       console.error("Error fetching images:", error);
     } finally {
-      dispatch(setLoading(false));  
+      dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
     fetchImages();
-  }, [page, dispatch]);
+  }, [page, imageType, dispatch]);
 
   const handleImageClick = (url) => {
-    dispatch(setSelectedImage(url)); 
+    dispatch(setSelectedImage(url));
   };
 
   const closeModal = () => {
-    dispatch(clearSelectedImage());  
+    dispatch(clearSelectedImage());
   };
 
   return (
     <div className="flex-1 p-4 bg-white min-h-screen">
       {loading ? (
         <div className="text-center text-cabernet-800">Loading...</div>
-      ) : viewType === "grid" ? ( 
+      ) : viewType === "grid" ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((img, idx) => (
             <div key={idx} className="bg-cabernet-100 shadow-md rounded p-4">
               <img
                 src={img.url}
-                alt="Cat"
+                alt={imageType === "cat" ? "Cat" : "Dog"}
                 className="rounded w-full h-32 sm:h-40 lg:h-48 object-cover cursor-pointer"
                 onClick={() => handleImageClick(img.url)}
               />
@@ -56,7 +67,7 @@ const Gallery = () => {
             <div key={idx} className="flex bg-cabernet-100 shadow-md rounded p-4">
               <img
                 src={img.url}
-                alt="Cat"
+                alt={imageType === "cat" ? "Cat" : "Dog"}
                 className="w-1/3 rounded object-cover h-32 sm:h-40 lg:h-48 cursor-pointer"
                 onClick={() => handleImageClick(img.url)}
               />
@@ -73,7 +84,7 @@ const Gallery = () => {
           <div className="relative">
             <img
               src={selectedImage}
-              alt="Selected Cat"
+              alt="Selected"
               className="max-w-full max-h-full object-contain"
             />
             <button
