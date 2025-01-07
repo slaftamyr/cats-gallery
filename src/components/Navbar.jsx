@@ -23,9 +23,9 @@ const Navbar = () => {
 
   return (
     <div className="bg-cabernet-800 text-white p-4 flex justify-between items-center relative">
-      <h1 className="text-xl font-bold">Cute Animals</h1>
+      <h1 className="text-xl font-bold"><i className=" fas fa-paw"></i> Animals</h1>
       <div className="flex items-center">
-  <span className="mr-2">CATs</span>
+  <span className="mr-2"><i className=" fas fa-cat"></i> </span>
   <label className="relative inline-flex items-center cursor-pointer">
     <input
       type="checkbox"
@@ -36,7 +36,7 @@ const Navbar = () => {
     <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-cabernet-700"></div>
     <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 transform peer-checked:translate-x-5"></div>
   </label>
-  <span className="mr-2">DOGs</span>
+  <span className="mr-2"><i className=" fas fa-dog"></i> </span>
 </div>
 
       <button
